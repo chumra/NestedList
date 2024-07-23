@@ -1,0 +1,12 @@
+:host {
+  display: contents;
+}
+
+:host(.nested) {
+  .container {
+    padding-left: 2rem;
+  }
+  .fa-arrow-right {
+    display: block;
+  }
+}

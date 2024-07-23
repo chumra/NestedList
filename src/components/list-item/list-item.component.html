@@ -1,0 +1,97 @@
+@if(!isHidden) {
+<div class="md:grid md:grid-cols-subgrid md:col-span-full container">
+  <div
+    class="grid grid-rows-2 md:grid-rows-1 gap-x-7 md:gap-0 grid-cols-[1fr_5rem_4.5rem] md:grid-cols-subgrid relative mb-3 shadow-md rounded-lg bg-white px-3 py-4 md:py-2 col-span-full"
+  >
+    <div
+      [ngClass]="[
+        'col-span-full md:col-span-2 row-span-2 md:row-span-1 grid grid-cols-subgrid md:grid-cols-[4.5rem_minmax(4.5rem,_auto)_1fr] md:grid-rows-[auto_auto]',
+        'before:content-[\'\'] before:w-2.5 before:h-2.5 before:rounded-lg before:absolute before:left-0 before:top-[1.85rem] md:before:top-1/2 md:col-span-1 before:-translate-y-1/2 before:-translate-x-1/2',
+        item.status | statusColor
+      ]"
+    >
+      <img
+        class="object-cover w-14 h-14 md:row-span-2 col-span-3 md:col-span-1 order-last md:order-first place-self-end md:place-self-auto my-3 md:my-0 md:ml-1 md:mr-0.5"
+        src="/assets/random.jpg"
+        alt="Random image"
+      />
+      <span
+        class="font-bold text-ellipsis overflow-hidden whitespace-nowrap md:col-span-2"
+      >
+        {{ item.name }}
+      </span>
+      <span
+        class="text-stone-400 font-semibold text-xs my-auto font-montserrat md:mr-2 col-span-2 md:col-span-1 place-self-end"
+      >
+        <i
+          [ngClass]="[
+            'fa-solid fa-flag mr-1 md:hidden',
+            item.priority | flagColor
+          ]"
+        ></i>
+        ZK {{ item.taskNumber }}
+        <button type="button" class="md:hidden">
+          <i
+            class="fa-solid fa-ellipsis-vertical ml-4 text-black text-base"
+          ></i>
+        </button>
+      </span>
+      <ng-container
+        *ngTemplateOutlet="
+          toggleNestedButton;
+          context: { classes: 'hidden md:block md:py-0.5' }
+        "
+      ></ng-container>
+    </div>
+
+    <ng-container
+      *ngTemplateOutlet="
+        toggleNestedButton;
+        context: { classes: 'md:hidden py-1' }
+      "
+    ></ng-container>
+
+    <div class="text-right md:text-left content-center text-stone-600">
+      <i class="fa-regular fa-calendar mr-2 text-xl"></i>
+      {{ item.startDate | date : "MMM d" }}
+    </div>
+    <div class="text-right md:text-left content-center text-stone-600">
+      <i class="fa-regular fa-calendar mr-2 text-xl"></i>
+      {{ item.endDate | date : "MMM d" }}
+    </div>
+    <div class="hidden md:block text-sm content-center">
+      <i [ngClass]="['fa-solid fa-flag mr-1', item.priority | flagColor]"></i>
+      {{ item.priority | titlecase }}
+    </div>
+    <div class="hidden md:block text-sm content-center">
+      <i class="fa-solid fa-chart-simple mr-1"></i>
+      {{ item.percentageOfProgress }} %
+    </div>
+    <i
+      class="fa-solid fa-arrow-right mr-2 absolute top-1/3 md:top-1/2 -left-7 hidden text-red-600"
+    ></i>
+  </div>
+
+  @for(childItem of item.childTasks; track childItem.id) {
+  <app-list-item
+    [item]="childItem"
+    class="nested"
+    [isHidden]="isNestedListHidden"
+  ></app-list-item>
+  }
+</div>
+}
+
+<ng-template #toggleNestedButton let-classes="classes">
+  <button
+    [class.invisible]="!item.childTasks.length"
+    [ngClass]="[
+      'border px-2 border-red-600 rounded text-red-500 w-fit',
+      classes
+    ]"
+    (click)="toggleNestedList()"
+  >
+    <i class="fa-solid fa-arrow-down-short-wide mr-2"></i>
+    <b>{{ item.childTasks.length }}</b>
+  </button>
+</ng-template>
