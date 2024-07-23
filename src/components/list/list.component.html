@@ -1,0 +1,12 @@
+<main class="p-3 md:grid md:grid-cols-table max-w-7xl mx-auto w-full">
+  <div [class]="headerClassList"></div>
+  <div [class]="headerClassList">NAME</div>
+  <div [class]="headerClassList">START</div>
+  <div [class]="headerClassList">END</div>
+  <div [class]="headerClassList">PRIORITY</div>
+  <div [class]="headerClassList">PROGRESS</div>
+
+  @for(item of list; track item.id) {
+  <app-list-item [item]="item"></app-list-item>
+  }
+</main>
